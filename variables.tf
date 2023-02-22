@@ -131,5 +131,5 @@ variable "concurrent" {
 variable "create_firewall_rule" {
   description = "Create firewall rule for healthcheck"
   type        = bool
-  default     = true
+  default     = false
 }

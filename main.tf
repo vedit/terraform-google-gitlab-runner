@@ -149,9 +149,9 @@ resource "google_compute_health_check" "gitlab-runner" {
 }
 
 resource "google_compute_firewall" "default" {
-  count   = create_firewall_rule ? 1 : 0
+  count   = var.create_firewall_rule ? 1 : 0
   name    = "${var.name}-fw"
-  network = google_compute_network.default.name
+  network = local.subnetwork_project
 
   allow {
     protocol = "tcp"
