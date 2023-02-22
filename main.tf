@@ -15,7 +15,7 @@
 locals {
   service_account_email = var.service_account_email == "" ? "${var.name}@${var.project}" : var.service_account_email
   tags                  = var.tags
-  tag-list              = concat([var.name], var.tag-list)
+  tag-list              = join(",", concat([var.name], var.tag-list))
   subnetwork_project    = var.subnetwork_project == "" ? var.subnetwork_project : var.project
 }
 
