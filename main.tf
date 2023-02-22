@@ -21,7 +21,7 @@ locals {
 
 # Main cloud-init config
 data "template_file" "cloud-init" {
-  template = "${file("${path.module}/templates/init.cfg.tpl")}"
+  template = file("${path.module}/templates/init.cfg.tpl")
 
   vars = {
     gitlab-runner-url  = var.gitlab-runner-url
@@ -48,10 +48,10 @@ data "template_cloudinit_config" "cloud-config" {
 
 # Shutdown script to de-register the runner when preempted.
 data "template_file" "shutdown-script" {
-  template = "${file("${path.module}/templates/shutdown-script.tpl")}"
+  template = file("${path.module}/templates/shutdown-script.tpl")
 }
 
-resource google_compute_instance_template "gitlab-runner" {
+resource "google_compute_instance_template" "gitlab-runner" {
   name_prefix  = "${var.name}-"
   machine_type = var.machine_type
   region       = var.region
@@ -97,7 +97,7 @@ resource google_compute_instance_template "gitlab-runner" {
 resource "google_compute_region_instance_group_manager" "gitlab-runner" {
   project  = var.project
   name     = var.name
-  provider        = google-beta
+  provider = google-beta
 
   base_instance_name = var.name
 
@@ -133,7 +133,7 @@ resource "google_compute_region_instance_group_manager" "gitlab-runner" {
   }
 }
 
-resource google_compute_health_check "gitlab-runner" {
+resource "google_compute_health_check" "gitlab-runner" {
   name    = var.name
   project = var.project
 
@@ -146,4 +146,17 @@ resource google_compute_health_check "gitlab-runner" {
     port         = var.hc_port
     request_path = var.hc_path
   }
+}
+
+resource "google_compute_firewall" "default" {
+  count   = create_firewall_rule ? 1 : 0
+  name    = "${var.name}-fw"
+  network = google_compute_network.default.name
+
+  allow {
+    protocol = "tcp"
+    ports    = [var.hc_port]
+  }
+
+  target_tags = ["allow-healthcheck"]
 }

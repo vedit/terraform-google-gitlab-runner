@@ -25,7 +25,7 @@ variable "registration_token" {
 
 variable "tag-list" {
   description = "The gitlab-runner tag list, passed to the --tag-list arugment of the registration command"
-  type        = list
+  type        = list(any)
   default     = ["docker", "gcp"]
 }
 
@@ -126,4 +126,10 @@ variable "preemptible" {
 variable "concurrent" {
   description = "How many jobs can be run concurrently.  See https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-global-section"
   default     = "8"
+}
+
+variable "create_firewall_rule" {
+  description = "Create firewall rule for healthcheck"
+  type        = bool
+  default     = true
 }
