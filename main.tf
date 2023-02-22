@@ -97,6 +97,7 @@ resource google_compute_instance_template "gitlab-runner" {
 resource "google_compute_region_instance_group_manager" "gitlab-runner" {
   project  = var.project
   name     = var.name
+  provider        = google-beta
 
   base_instance_name = var.name
 
