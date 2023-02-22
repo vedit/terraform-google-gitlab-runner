@@ -103,9 +103,9 @@ resource "google_compute_region_instance_group_manager" "gitlab-runner" {
 
   region = var.region
   distribution_policy_zones = [
-    "${var.region}-a",
     "${var.region}-b",
     "${var.region}-c",
+    "${var.region}-d",
   ]
 
   update_policy {
