@@ -13,10 +13,10 @@
 # limitations under the License.
 
 locals {
-  service_account_email = "${var.service_account_email == "" ? "${var.name}@${var.project}" : var.service_account_email}"
+  service_account_email = var.service_account_email == "" ? "${var.name}@${var.project}" : var.service_account_email
   tags                  = var.tags
-  tag-list              = "${join(",", concat(tolist(var.name), var.tag-list))}"
-  subnetwork_project    = "${var.subnetwork_project == "" ? var.subnetwork_project : var.project}"
+  tag-list              = concat([var.name], var.tag-list)
+  subnetwork_project    = var.subnetwork_project == "" ? var.subnetwork_project : var.project
 }
 
 # Main cloud-init config
